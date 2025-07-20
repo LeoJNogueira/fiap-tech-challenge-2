@@ -1,68 +1,103 @@
 # fiap-tech-challenge-2
 
-# 📈 Otimização de Carteira de Ações com Algoritmo Genético
+# 🌾 Otimização de Eficiência de Plantio com Algoritmo Genético
 
-## 🎯 Objetivo do Sistema
-Utilizando Algoritmos Genéticos (AGs) o sistema selecionará ativos de uma carteira de ações, otimizando o retorno esperado e minimizando o risco, conforme o perfil do investidor escolhido.
-
----
-
-## 🗃️ 1. Base de Dados
-- Utilizaremos dados históricos de ações da B3 (Bolsa de Valores de São Paulo) disponiveis no yfinance (Yahoo)
-- Obtenção de dados históricos de ações (ex: últimos 5 anos). (ajustar tempo se precisar)
-- Cálculo de métricas por ativo:
-  - Retorno médio
-  - Desvio padrão (risco)
-  - Correlação entre ativos
+## 🎯 Objetivo
+Utilizar Algoritmo Genético para definir a configuração ideal de culturas em uma área agrícola de 2 hectares, maximizando produtividade e minimizando competição entre espécies, respeitando condições ecológicas e econômicas.
 
 ---
 
-## 🧬 2. Representação Genética
-- Cada indivíduo representa uma carteira:
-  - Vetor binário: `[1, 0, 1, 1, 0]` → seleção de ativos.
-  - Vetor de pesos: `[0.3, 0, 0.2, 0.5, 0]` → distribuição percentual.
+## 🧩 Etapas do Projeto
+
+### 1. Definição das Culturas
+- Culturas disponíveis:
+  - Milho, feijão, soja, sorgo, mandioca, etc.
+- Parâmetros de cada cultura:
+  - Produtividade estimada por hectare
+  - Ciclo de crescimento
+  - Quantidade de água necessária (parametrizar custo por m³)
+  - Compatibilidade com outras espécies (consórcio ou competição)
 
 ---
 
-## 📐 3. Função de Fitness
-- Utilizar o **Sharpe Ratio**:
-
-
-Onde α e β refletem o perfil do investidor (conservador ou agressivo).
-
----
-
-## 🔁 4. Processo Evolutivo
-- **População inicial**: Gerada aleatoriamente.
-- **Seleção**: Escolha das carteiras com melhor desempenho.
-- **Crossover**: Combinação de características entre carteiras.
-- **Mutação**: Alteração de ativos ou pesos para explorar novas possibilidades.
+### 2. Modelagem da Área
+- Divisão da área em células (grid) ou parcelas
+- Atributos das parcelas:
+  - Coeficiente de Umidade do solo
 
 ---
 
-## 🧪 5. Avaliação e Refinamento
-- Avaliação após N gerações:
-- Carteira otimizada conforme critérios definidos.
-- Restrições opcionais:
-- Número mínimo/máximo de ativos.
-- Limites por setor.
-- Peso mínimo por ativo.
+### 3. Codificação Genética
+- Cada indivíduo representa uma configuração de culturas
+- Exemplos:
+  - Vetor simples: `[milho, soja, mandioca, feijão]`
+  - Matriz para representar o grid da área
+
+---
+
+### 4. Função de Fitness
+- Avaliação dos indivíduos com múltiplos critérios:
+  - Produção estimada
+  - Compatibilidade ecológica
+  - Custo operacional
+  - Lucro financeiro esperado
+- Fórmula exemplo: Fitness = α × produção + β × lucro - γ × competição
+
+
+
+---
+
+### 5. Algoritmo Genético
+- **População inicial**: configurações aleatórias
+- **Seleção**: indivíduos com maior fitness
+- **Crossover**: combinação de culturas entre indivíduos
+- **Mutação**: alteração aleatória de culturas em parcelas
+- **Restrições**:
+  - Evitar culturas incompatíveis lado a lado
+  - Respeitar calendário agrícola e época de plantio (desejavel)
+  - Limitar número de culturas por hectare até 2
+  - Retorno financeiro mínimo por hectare
+  - Custo de produção máximo por hectare
+
+---
+
+## 🔬 Dados Necessários
+
+- Tabelas agronômicas:
+- Produtividade média
+- Preço de mercado
+- Compatibilidade
 
 ---
 
 ## 🧰 Ferramentas Recomendadas
 
-| Finalidade            | Ferramenta             |
-|-----------------------|------------------------|
-| Dados financeiros     | `yfinance`, `pandas`   |
-| Algoritmos genéticos  | `DEAP`, `PyGAD`        | 
-| Análise estatística   | `numpy`, `scipy`       |
-| Visualização          | `matplotlib`, `plotly` |
+| Finalidade                  | Ferramenta              |
+|-----------------------------|-------------------------|
+| Dados agronômicos           | EMBRAPA, IBGE, FAO      |
+| Algoritmo Genético          | `DEAP`, `PyGAD`         |
+| Geoprocessamento / Grid     | `geopandas`, `shapely`  |
+| Visualização de mapas       | `folium`, `matplotlib`  |
+| Otimização multivariada     | `SciPy`, `sklearn`      |
 
 ---
 
-## 🚀 Próximos passos
-- Definir lista de ativos brasileiros (ex: PETR4, VALE3, ITUB4).
-- Coletar dados e preparar as métricas.
-- Implementar e testar o AG com uma população inicial.
-- Analisar os resultados e ajustar a função de fitness.
+## 🚀 Próximos Passos
+
+1. Culturas possíveis (Carlos)
+2. Coletar os dados necessários e preparar o grid (Carlos)
+3. Implementar o AG com representação genética adequada (Dan / Leo / Carlos)
+4. Testar e refinar a função de fitness (Dan)
+5. Validação de comparação com dados históricos (Leo)
+
+
+## Definindo Culturas
+- Quais variavies precismos saber para compatibilizar culturas
+- Qual o requisito de produção de cada cultura
+- Qual o custo de produção de cada cultura
+- Qual o ciclo de vida de cada cultura
+- Qual o requisito de água de cada cultura
+- Qual o retorno financeiro de cada cultura
+
+
+Induviduo [CUSTO PRODUÇÃO, PRODUTIVIDADE, CICLO DE VIDA, REQUISITO DE ÁGUA, RETORNO FINANCEIRO, COMPATIBILIDADE]
