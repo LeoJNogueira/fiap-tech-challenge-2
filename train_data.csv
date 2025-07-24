@@ -1,0 +1,11 @@
+CULTURA,CUSTO PRODUÇÃO,PRODUTIVIDADE,CICLO DE VIDA MIN EM DIAS,CICLO DE VIDA MAX EM DIAS,REQUISITO DE ÁGUA,RETORNO FINANCEIRO,COMPATIBILIDADE,ESPAÇO MÍNIMO m²
+milho,médio,alto,90,120,médio,médio-alto,feijão/mandioca,0.70
+soja,médio-alto,alto,90,150,médio,alto,milho/sorgo,0.40
+café,alto,médio,1096,1461,alto,alto,feijão/milho,2.50
+feijão,baixo-médio,médio,60,90,médio,médio,milho/mandioca,0.40
+sorgo,baixo,médio-alto,90,130,baixo,médio,soja/milho,0.50
+mandioca,baixo-médio,médio-alto,12,18,médio-baixo,médio,feijão/milho,1.00
+cana-de-açúcar,alto,alto,12,18,alto,alto,baixa compatibilidade,1.50
+algodão,alto,alto,150,180,médio,alto,milho/sorgo,0.80
+arroz,médio,médio-alto,110,150,alto,médio,baixa compatibilidade,0.20
+trigo,médio,médio,100,130,médio,médio,soja/aveia,0.15
