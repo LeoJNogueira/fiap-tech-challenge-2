@@ -1,3 +1,59 @@
+import random
+
+
+def crossover(population):
+    if len(population) < 2:
+        print("Population must have at least two individuals for crossover.")
+        return
+
+    new_population = []
+
+    for _ in range(len(population)):
+        parent1, parent2 = select_unique_parents(population)
+
+        offspring1, offspring2 = crossover_individuals(parent1, parent2)
+
+        new_population.extend([offspring1, offspring2])
+
+    return new_population
+
+
+def select_unique_parents(population):
+    # Sample two parents ensuring they are not the same
+    parent1 = random.choice(population)
+    parent2 = random.choice(population)
+
+    # Keep selecting until the parents are unique
+    while parent1.equals(parent2):  # Using .equals for pandas DataFrame comparison
+        parent2 = random.choice(population)
+
+    return parent1, parent2
+
+
+def crossover_individuals(parent1, parent2):
+    offspring1 = parent1.copy()
+    offspring2 = parent2.copy()
+
+    unique_to_sample1 = offspring1[~offspring1['CULTURA'].isin(offspring2['CULTURA'])]
+    # Get rows that are in sample2 but not in sample1
+    unique_to_sample2 = offspring2[~offspring2['CULTURA'].isin(offspring1['CULTURA'])]
+
+    if not unique_to_sample1.empty and not unique_to_sample2.empty:
+
+        row1 = unique_to_sample1.sample(1)
+        row2 = unique_to_sample2.sample(1)
+
+
+        idx1 = row1.index[0]
+        idx2 = row2.index[0]
+
+        offspring1.loc[idx1] = row2.iloc[0]
+        offspring2.loc[idx2] = row1.iloc[0]
+
+        return offspring1, offspring2
+    return parent1, parent2
+
+
 def project_fitness_function(sample, orcamento_maximo, m2_area, limite_agua, janela_dias):
     # pontuação normalizada do conjunto
     W_prod = 0.6
@@ -44,12 +100,9 @@ def project_fitness_function(sample, orcamento_maximo, m2_area, limite_agua, jan
 
     # normalizar para ficar entre 0 e 1
     normalized_competition_score = 0 if competition_score < 0 else 1 if competition_score > 1 else competition_score
-    print('comp: ', normalized_competition_score)
 
     # score = (W_prod * production_score)+(W_comp * competition_score)
-    score = (W_prod * normalized_production_score) + (W_comp * competition_score)
-
-    print(score)
+    score = (W_prod * normalized_production_score) + (W_comp * normalized_competition_score)
 
     # penalidades
 
@@ -79,6 +132,4 @@ def project_fitness_function(sample, orcamento_maximo, m2_area, limite_agua, jan
     if max(ciclo_de_vida) > janela_dias:
         P_ecologica += 0.5
 
-    fitness = score * P_economica * P_ecologica
-
-    print(fitness)
+    return score * P_economica * P_ecologica
