@@ -99,7 +99,7 @@ def project_fitness_function(sample, orcamento_maximo, m2_area, limite_agua, jan
                 competition_score -= 1.0
 
     # normalizar para ficar entre 0 e 1
-    normalized_competition_score = 0 if competition_score < 0 else 1 if competition_score > 1 else competition_score
+    normalized_competition_score = 0 if competition_score <= 0 else 1 if competition_score >= 1 else competition_score
 
     # score = (W_prod * production_score)+(W_comp * competition_score)
     score = (W_prod * normalized_production_score) + (W_comp * normalized_competition_score)
