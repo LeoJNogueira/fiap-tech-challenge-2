@@ -108,7 +108,6 @@ def project_fitness_function(sample, orcamento_maximo, m2_area_disponivel, limit
             if s[1]['CULTURA'] in value['antagonica']:
                 competition_score -= 1.0
 
-    # normalizar para ficar entre 0 e 1
     normalized_competition_score = 0 if competition_score <= 0 else 1 if competition_score >= 1 else competition_score
 
     # score = (W_prod * production_score)+(W_comp * competition_score)
@@ -139,7 +138,9 @@ def project_fitness_function(sample, orcamento_maximo, m2_area_disponivel, limit
 
     # ciclo de vida: verificar se o ciclo de vida mais longo cabe na janela de plantio
 
-    if max(ciclo_de_vida) > janela_dias:
-        P_ecologica += 0.5
+    maior_ciclo_vida = max(ciclo_de_vida)
+
+    if maior_ciclo_vida > janela_dias:
+        P_ecologica += 1 - (janela_dias / maior_ciclo_vida)
 
     return score * P_economica * P_ecologica
