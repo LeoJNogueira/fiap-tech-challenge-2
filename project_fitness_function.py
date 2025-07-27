@@ -1,17 +1,27 @@
 import random
 
+def mutation(sample,df):
+    remaining_rows = df[~df['CULTURA'].isin(sample['CULTURA'])]
+    if not remaining_rows.empty:
+        row_to_replace_idx = sample.sample(1).index[0]
+        random_new_row = remaining_rows.sample(1)
+        sample.loc[row_to_replace_idx] = random_new_row.iloc[0]
+    return sample
 
-def crossover(population):
+def crossover(population,df):
     if len(population) < 2:
         print("Population must have at least two individuals for crossover.")
         return
 
     new_population = []
 
-    for _ in range(len(population)):
+    for _ in range(len(population)//2):
         parent1, parent2 = select_unique_parents(population)
 
         offspring1, offspring2 = crossover_individuals(parent1, parent2)
+
+        offspring1 = mutation(offspring1,df)
+        offspring2 = mutation(offspring2,df)
 
         new_population.extend([offspring1, offspring2])
 
@@ -54,7 +64,7 @@ def crossover_individuals(parent1, parent2):
     return parent1, parent2
 
 
-def project_fitness_function(sample, orcamento_maximo, m2_area, limite_agua, janela_dias):
+def project_fitness_function(sample, orcamento_maximo, m2_area_disponivel, limite_agua, janela_dias):
     # pontuação normalizada do conjunto
     W_prod = 0.6
     W_comp = 0.4
@@ -107,25 +117,25 @@ def project_fitness_function(sample, orcamento_maximo, m2_area, limite_agua, jan
     # penalidades
 
     custo_total = 0
-    agua_total = 0
+    consumo_agua_cultura = 0
     ciclo_de_vida = []
-    area_total = 0
+    area_total_cultura = 0
 
     for s in sample.iterrows():
         custo_total += s[1]['CUSTO PRODUÇÃO']
-        agua_total += s[1]['REQUISITO DE ÁGUA']
-        area_total += s[1]['ESPAÇO MÍNIMO m²']
+        consumo_agua_cultura += s[1]['REQUISITO DE ÁGUA']
+        area_total_cultura += s[1]['ESPAÇO MÍNIMO m²']
         ciclo_de_vida.append(s[1]['CICLO DE VIDA MAX EM DIAS'])
 
     # Se Custo Total > Orçamento_Máximo, então P_econômica = 0.01, senão P_econômica=1
 
     P_economica = 0.01 if custo_total >= orcamento_maximo else 1
 
-    P_economica += 1 - (area_total / m2_area)
+    P_economica += 1 - (area_total_cultura / m2_area_disponivel)
 
     # Água Total > Sua_Disponibilidade_de_Água, então P_ecológica = 0.01, senão P_ecológica = 1
 
-    P_ecologica = 0.01 if agua_total >= limite_agua else 1
+    P_ecologica = 0.01 if consumo_agua_cultura >= limite_agua else 1
 
     # ciclo de vida: verificar se o ciclo de vida mais longo cabe na janela de plantio
 
