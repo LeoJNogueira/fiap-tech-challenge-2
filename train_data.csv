@@ -1,0 +1,11 @@
+CULTURA,CUSTO PRODUÇÃO,PRODUTIVIDADE,CICLO DE VIDA MIN EM DIAS,CICLO DE VIDA MAX EM DIAS,REQUISITO DE ÁGUA,RETORNO FINANCEIRO,SINERGIA,COMPANHEIRA,NEUTRA,ANTAGÔNICA,ESPAÇO MÍNIMO m²
+milho,2,3,90,120,2,2.5,feijão,"mandioca,abóbora","arroz,trigo","algodão,cana-de-açúcar",0.70
+soja,2.5,3,90,150,2,3,sorgo,"milho,trigo","feijão,arroz","café,cana-de-açúcar",0.40
+café,3,2,1096,1461,3,3,feijão,"milho,banana","mandioca,arroz","soja,cana-de-açúcar",2.50
+feijão,1.5,2,60,90,2,2,milho,"mandioca,batata","soja,trigo","algodão,cana-de-açúcar",0.40
+sorgo,1,2.5,90,130,1,2,soja,"milho,trigo","feijão,mandioca","arroz,café",0.50
+mandioca,1.5,2.5,12,18,1.5,2,feijão,"milho,batata","sorgo,café","trigo,algodão",1.00
+cana-de-açúcar,3,3,12,18,3,3,nenhuma,nenhuma,"arroz,trigo","milho,feijão,soja,café",1.50
+algodão,3,3,150,180,2,3,nenhuma,"milho,sorgo","soja,trigo","feijão,mandioca",0.80
+arroz,2,2.5,110,150,3,2,nenhuma,"trigo,aveia","milho,soja","sorgo,cana-de-açúcar",0.20
+trigo,2,2,100,130,2,2,soja,"arroz,aveia","milho,feijão","mandioca,cana-de-açúcar",0.15
