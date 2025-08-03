@@ -14,12 +14,13 @@ def crossover(population,df):
         return
 
     new_population = []
-
+    # São selecionado 50% dos indivíduos (os 50% melhores)
     for _ in range(len(population)//2):
         parent1, parent2 = select_unique_parents(population)
 
         offspring1, offspring2 = crossover_individuals(parent1, parent2)
 
+        # É aplicada mutação aleatória nos genes de cada nova amostra
         offspring1 = mutation(offspring1,df)
         offspring2 = mutation(offspring2,df)
 
@@ -65,18 +66,19 @@ def crossover_individuals(parent1, parent2):
 
 
 def project_fitness_function(sample, orcamento_maximo, m2_area_disponivel, limite_agua, janela_dias):
-    # pontuação normalizada do conjunto
+    # pesos de cada conjunto
     W_prod = 0.6
     W_comp = 0.4
 
     # para cada cultura do conjunto
     # pontuação_produtividade = (produtividade/espaço minimo)
-    normalized_production_score = 0
+    pontuacao_producao_normalizada = 0
     competition_score = 0
+    plant_map = dict()
 
     for s in sample.iterrows():
-        production_score = (s[1]['PRODUTIVIDADE'] / s[1]['ESPAÇO MÍNIMO m²'])
-        normalized_production_score += production_score
+        pontuacao_producao = (s[1]['PRODUTIVIDADE'] / s[1]['ESPAÇO MÍNIMO m²'])
+        pontuacao_producao_normalizada += pontuacao_producao
 
     # para cada cultura do conjunto
     # pontuação_competitividade = 0
@@ -85,14 +87,10 @@ def project_fitness_function(sample, orcamento_maximo, m2_area_disponivel, limit
     # 0.0 Neutra
     # -1.0 Antagônica
 
-    plant_map = dict()
-
     for s in sample.iterrows():
         plant_map[s[1]['CULTURA']] = dict(sinergia=s[1]['SINERGIA'].split(','),
                                           companheira=s[1]['COMPANHEIRA'].split(','), neutra=s[1]['NEUTRA'].split(','),
                                           antagonica=s[1]['ANTAGÔNICA'].split(','))
-
-    # print(plant_map)
 
     # score de compatibilidade
     for s in sample.iterrows():
@@ -110,11 +108,10 @@ def project_fitness_function(sample, orcamento_maximo, m2_area_disponivel, limit
 
     normalized_competition_score = 0 if competition_score <= 0 else 1 if competition_score >= 1 else competition_score
 
-    # score = (W_prod * production_score)+(W_comp * competition_score)
-    score = (W_prod * normalized_production_score) + (W_comp * normalized_competition_score)
+    # score = (W_prod * pontuacao_producao)+(W_comp * competition_score)
+    score = (W_prod * pontuacao_producao_normalizada) + (W_comp * normalized_competition_score)
 
     # penalidades
-
     custo_total = 0
     consumo_agua_cultura = 0
     ciclo_de_vida = []
@@ -126,18 +123,16 @@ def project_fitness_function(sample, orcamento_maximo, m2_area_disponivel, limit
         area_total_cultura += s[1]['ESPAÇO MÍNIMO m²']
         ciclo_de_vida.append(s[1]['CICLO DE VIDA MAX EM DIAS'])
 
-    # Se Custo Total > Orçamento_Máximo, então P_econômica = 0.01, senão P_econômica=1
-
+    # Se Custo Total > Orçamento máximo, então P_econômica = 0.01, senão P_econômica=1
     P_economica = 0.01 if custo_total >= orcamento_maximo else 1
 
+    # utilizaçào muito grande grande de area também será punida e adicionado a penalidade econômica
     P_economica += 1 - (area_total_cultura / m2_area_disponivel)
 
-    # Água Total > Sua_Disponibilidade_de_Água, então P_ecológica = 0.01, senão P_ecológica = 1
-
+    # Se o consumo de água total > disponibilidade de água, então P_ecológica = 0.01, senão P_ecológica = 1
     P_ecologica = 0.01 if consumo_agua_cultura >= limite_agua else 1
 
-    # ciclo de vida: verificar se o ciclo de vida mais longo cabe na janela de plantio
-
+    # É verificado se o ciclo de vida mais longo cabe na janela de plantio caso contrário é aplicado uma taxa de penalidade proporcional
     maior_ciclo_vida = max(ciclo_de_vida)
 
     if maior_ciclo_vida > janela_dias:
