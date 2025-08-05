@@ -14,7 +14,7 @@ def crossover(population,df):
         return
 
     new_population = []
-    # São selecionado 50% dos indivíduos (os 50% melhores)
+    # o tamanho do array é dividido por 2 para poder iterar sobre dois itens por vez
     for _ in range(len(population)//2):
         parent1, parent2 = select_unique_parents(population)
 
